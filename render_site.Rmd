@@ -1,0 +1,75 @@
+---
+title: 'Secure file transfer'
+output: html_document
+runtime: shiny
+resource_files:
+- export/colon_s_export.csv.gpg
+- export/colon_s_export.rds.gpg
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(shiny)
+```
+
+```{r}
+# NOTE
+# Change resource files above or delete and use "Add more ..." tab when deploying.
+# It's because files are in a subfolder.
+```
+
+```{r}
+# Copy file name from -1_prep.R
+file_name = "colon_s_export"
+```
+
+```{r}
+# This should not normally need changed. 
+safe_path = "safe"
+export_path = "export"
+file_name_rds = paste0(file_name, ".rds")
+file_name_csv = paste0(file_name, ".csv")
+file_name1 = paste0(file_name_rds, ".gpg")
+file_name2 = paste0(file_name_csv, ".gpg")
+file_path1 = here::here(export_path, paste0(file_name_rds, ".gpg"))
+file_path2 = here::here(export_path, paste0(file_name_csv, ".gpg"))
+```
+
+## colon_s data export
+
+929 rows
+31 variables. 
+
+Link to data dictionary. 
+
+Only xxx private key can open. 
+
+These are patient level data and must be stored securely.  
+Do not place on removable media (e.g. laptop, USB stick).  
+
+Server-based analysis is best practice. 
+
+### RDS 
+
+```{r}
+output$downloadData_1 <- downloadHandler(
+  filename = file_name1,
+  content = function(filename) file.copy(file_path1, filename)
+)
+
+renderUI({downloadButton("downloadData_1", "Download", class = "downbutton")})
+
+```
+
+### CSV
+
+```{r}
+output$downloadData_2 <- downloadHandler(
+  filename = file_name2,
+  content = function(filename) file.copy(file_path2, filename)
+)
+
+renderUI({downloadButton("downloadData_2", "Download", class = "downbutton")})
+
+```
+
